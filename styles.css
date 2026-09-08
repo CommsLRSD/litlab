@@ -2613,6 +2613,26 @@ details > p {
   border-color: var(--primary-lighter);
 }
 
+.interventions-results-panel .resource-card {
+  border-left: 4px solid var(--secondary);
+  background: linear-gradient(90deg, var(--card-blue-bg), var(--bg) 18%);
+}
+
+.interventions-results-panel .resource-card:nth-child(4n + 2) {
+  border-left-color: var(--accent);
+  background: linear-gradient(90deg, var(--card-yellow-bg), var(--bg) 18%);
+}
+
+.interventions-results-panel .resource-card:nth-child(4n + 3) {
+  border-left-color: var(--card-pink-border);
+  background: linear-gradient(90deg, var(--card-pink-bg), var(--bg) 18%);
+}
+
+.interventions-results-panel .resource-card:nth-child(4n + 4) {
+  border-left-color: var(--card-mint-border);
+  background: linear-gradient(90deg, var(--card-mint-bg), var(--bg) 18%);
+}
+
 .resource-card-main {
   min-width: 0;
   flex: 1;
@@ -6713,23 +6733,27 @@ body.step-review-modal-open { overflow: hidden; }
   max-width: 1180px;
   width: 100%;
   margin: 0 auto;
-  padding: var(--space-2xl) var(--space-lg);
+  padding: var(--space-xl) var(--space-lg);
 }
 
 .interventions-page-layout {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-lg);
+  display: grid;
+  grid-template-columns: minmax(220px, 260px) minmax(0, 1fr);
+  align-items: start;
+  gap: var(--space-xl);
 }
 
-/* Compact filter panel above the resource results. */
+/* Compact desktop sidebar with controls that read as simple text lines. */
 .filter-sidebar {
   width: 100%;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
+  position: sticky;
+  top: calc(var(--nav-height) + var(--space-md));
+  background: linear-gradient(165deg, var(--primary-faint), var(--bg) 55%, var(--accent-light));
+  border: none;
+  border-top: 4px solid var(--secondary);
+  border-radius: var(--radius);
   box-shadow: var(--shadow-sm);
-  padding: var(--space-lg);
+  padding: var(--space-md);
   color: var(--text);
 }
 
@@ -6746,74 +6770,13 @@ body.step-review-modal-open { overflow: hidden; }
   flex-direction: column;
   align-items: flex-start;
   gap: var(--space-sm);
-  margin-bottom: var(--space-md);
-}
-
-/* Chip controls mirror the concise, multi-device filter pattern. */
-.filter-chip-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.45rem;
-}
-
-.filter-chip {
-  padding: 0.38rem 0.7rem;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-pill);
-  background: var(--bg);
-  color: var(--text-secondary);
-  font-family: inherit;
-  font-size: 0.8rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: border-color var(--duration) var(--ease), background var(--duration) var(--ease), color var(--duration) var(--ease);
-}
-
-.filter-chip:hover {
-  border-color: var(--primary);
-  color: var(--primary);
-}
-
-.filter-chip.is-active {
-  background: var(--primary);
-  border-color: var(--primary);
-  color: var(--text-on-primary);
-}
-
-.advanced-filters {
-  margin-top: var(--space-sm);
-  border-top: 1px solid var(--border);
-}
-
-.advanced-filters > summary {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: var(--space-md) 0;
-  color: var(--text-secondary);
-  cursor: pointer;
-  font-size: 0.85rem;
-  font-weight: 700;
-  list-style: none;
-}
-
-.advanced-filters > summary::-webkit-details-marker { display: none; }
-.advanced-filters > summary .material-symbols-rounded { transition: transform var(--duration) var(--ease); }
-.advanced-filters[open] > summary .material-symbols-rounded { transform: rotate(180deg); }
-
-.advanced-filters[open] {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  column-gap: var(--space-md);
-}
-
-.advanced-filters[open] > summary { grid-column: 1 / -1; }
+  margin-bottom: var(--space-sm);
 }
 
 /* "Clear Filters" sits at the very bottom of the sidebar, text only */
 .filter-sidebar-footer {
-  margin-top: var(--space-lg);
-  padding-top: var(--space-md);
+  margin-top: var(--space-sm);
+  padding-top: var(--space-sm);
   border-top: 1px solid var(--border);
 }
 
@@ -6832,10 +6795,9 @@ body.step-review-modal-open { overflow: hidden; }
   color: var(--primary-light);
 }
 
-/* Simple labelled filter fields (pillar / type / language and the optional
-   refinements inside "More filters") */
+/* Simple labelled filter fields */
 .filter-group {
-  margin-bottom: var(--space-md);
+  margin-bottom: 0.7rem;
 }
 
 .filter-group-label {
@@ -6845,50 +6807,31 @@ body.step-review-modal-open { overflow: hidden; }
   color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  margin-bottom: 4px;
+  margin-bottom: 1px;
 }
 
 .filter-group .styled-select {
   width: 100%;
+  min-height: 34px;
+  padding: 0.35rem 1.5rem 0.35rem 0;
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  border-radius: 0;
+  background-color: transparent;
+  background-position: right 0.15rem center;
+  font-size: 0.82rem;
+  box-shadow: none;
 }
 
-.filter-accordion-item {
-  border-top: 1px solid var(--border);
+.filter-group .styled-select:focus {
+  border-color: var(--secondary);
+  box-shadow: none;
 }
 
-.filter-accordion-item > summary {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-sm);
-  padding: var(--space-sm) 0;
-  cursor: pointer;
-  list-style: none;
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--text-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-.filter-accordion-item > summary::-webkit-details-marker { display: none; }
-
-.filter-accordion-item > summary::after {
-  content: '';
-  width: 8px;
-  height: 8px;
-  border-right: 2px solid currentColor;
-  border-bottom: 2px solid currentColor;
-  transform: rotate(45deg) translate(-2px, -2px);
-  transition: transform var(--duration) var(--ease);
-}
-
-.filter-accordion-item[open] > summary::after {
-  transform: rotate(-135deg) translate(-2px, -2px);
-}
-
-.filter-accordion-content {
-  padding-bottom: var(--space-md);
+.filter-group-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-md);
 }
 
 .interventions-results-panel {
@@ -6952,8 +6895,8 @@ body.step-review-modal-open { overflow: hidden; }
 
 @media (max-width: 900px) {
   .interventions-page-layout {
-    flex-direction: column;
-    align-items: stretch;
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
   }
 
   .filter-sidebar {
