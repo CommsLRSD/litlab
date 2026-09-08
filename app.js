@@ -7303,7 +7303,10 @@ function renderMenuResults() {
 function onMenuFilterChange(field, value) {
     menuState[field] = value;
     setRememberedMenuFilters({ [field]: value || null });
-    if (field === 'program') syncMenuLanguageToggle();
+    if (field === 'program') {
+        storeMenuLanguage(value);
+        syncMenuLanguageToggle();
+    }
     renderMenuFilterOptions();
     renderMenuResults();
 }
