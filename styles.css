@@ -2675,8 +2675,8 @@ details > p {
 .resource-card-links {
   flex-shrink: 0;
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
+  flex-wrap: wrap;
+  align-items: center;
   gap: 6px;
 }
 
@@ -6718,30 +6718,27 @@ body.step-review-modal-open { overflow: hidden; }
 
 .interventions-page-layout {
   display: flex;
-  align-items: flex-start;
+  flex-direction: column;
   gap: var(--space-lg);
 }
 
-/* Collapsible accordion filter sidebar (left) + results panel (right) */
+/* Compact filter panel above the resource results. */
 .filter-sidebar {
-  flex: 0 0 280px;
-  width: 280px;
-  background: var(--primary);
-  border: 1px solid var(--primary);
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-sm);
   padding: var(--space-lg);
-  position: sticky;
-  top: var(--space-lg);
-  color: var(--text-on-primary);
+  color: var(--text);
 }
 
 .filter-sidebar .wizard-title {
-  color: var(--text-on-primary);
+  color: var(--text);
 }
 
 .filter-sidebar .filter-group-label {
-  color: rgba(255, 255, 255, 0.75);
+  color: var(--text-secondary);
 }
 
 .filter-sidebar-header {
@@ -6752,49 +6749,79 @@ body.step-review-modal-open { overflow: hidden; }
   margin-bottom: var(--space-md);
 }
 
-/* Language toggle (English / French) pinned to the top of the sidebar */
-.filter-lang-toggle {
+/* Chip controls mirror the concise, multi-device filter pattern. */
+.filter-chip-list {
   display: flex;
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  border-radius: var(--radius);
-  overflow: hidden;
+  flex-wrap: wrap;
+  gap: 0.45rem;
 }
 
-.filter-lang-btn {
-  flex: 1;
-  padding: 0.5rem 0.6rem;
-  border: none;
-  background: transparent;
-  color: rgba(255, 255, 255, 0.8);
+.filter-chip {
+  padding: 0.38rem 0.7rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  background: var(--bg);
+  color: var(--text-secondary);
   font-family: inherit;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background var(--duration) var(--ease), color var(--duration) var(--ease);
+  transition: border-color var(--duration) var(--ease), background var(--duration) var(--ease), color var(--duration) var(--ease);
 }
 
-.filter-lang-btn:hover {
-  background: rgba(255, 255, 255, 0.12);
+.filter-chip:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.filter-chip.is-active {
+  background: var(--primary);
+  border-color: var(--primary);
   color: var(--text-on-primary);
 }
 
-.filter-lang-btn.is-active {
-  background: var(--text-on-primary);
-  color: var(--primary);
+.advanced-filters {
+  margin-top: var(--space-sm);
+  border-top: 1px solid var(--border);
+}
+
+.advanced-filters > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-md) 0;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 700;
+  list-style: none;
+}
+
+.advanced-filters > summary::-webkit-details-marker { display: none; }
+.advanced-filters > summary .material-symbols-rounded { transition: transform var(--duration) var(--ease); }
+.advanced-filters[open] > summary .material-symbols-rounded { transform: rotate(180deg); }
+
+.advanced-filters[open] {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  column-gap: var(--space-md);
+}
+
+.advanced-filters[open] > summary { grid-column: 1 / -1; }
 }
 
 /* "Clear Filters" sits at the very bottom of the sidebar, text only */
 .filter-sidebar-footer {
   margin-top: var(--space-lg);
   padding-top: var(--space-md);
-  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  border-top: 1px solid var(--border);
 }
 
 .filter-clear-btn {
   border: none;
   background: transparent;
   padding: 0;
-  color: rgba(255, 255, 255, 0.85);
+  color: var(--primary);
   font-family: inherit;
   font-size: 0.85rem;
   text-decoration: underline;
@@ -6802,7 +6829,7 @@ body.step-review-modal-open { overflow: hidden; }
 }
 
 .filter-clear-btn:hover {
-  color: var(--text-on-primary);
+  color: var(--primary-light);
 }
 
 /* Simple labelled filter fields (pillar / type / language and the optional
