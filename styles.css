@@ -2599,6 +2599,7 @@ details > p {
   align-items: center;
   justify-content: space-between;
   gap: var(--space-md);
+  min-width: 0;
   padding: var(--space-md) var(--space-lg);
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -2667,7 +2668,9 @@ details > p {
   flex-shrink: 0;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 4px;
+  max-width: 100%;
   padding: 0.45rem 0.85rem;
   border-radius: var(--radius);
   font-size: 0.8rem;
@@ -2697,7 +2700,9 @@ details > p {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: flex-end;
   gap: 6px;
+  min-width: 0;
 }
 
 .results-prompt {
@@ -6993,6 +6998,29 @@ body.step-review-modal-open { overflow: hidden; }
 @media (max-width: 600px) {
   .interventions-page-body {
     padding: var(--space-md);
+  }
+
+  .resource-card {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .resource-card-links {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .resource-link-btn {
+    flex: 1 1 calc(50% - 3px);
+    min-width: 0;
+    padding-right: 0.65rem;
+    padding-left: 0.65rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .resource-link-btn {
+    flex-basis: 100%;
   }
 }
 
