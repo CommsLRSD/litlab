@@ -7124,19 +7124,6 @@ function distinctGradeValues(state) {
     });
 }
 
-function buildFacetChipsHtml(values, selected, field, translate) {
-    const allLabel = t('wizard_select_placeholder');
-    const chips = [{ value: '', label: allLabel }, ...values.map(value => ({
-        value,
-        label: translate ? translate(value) : value
-    }))];
-    return chips.map(({ value, label }) => `
-        <button type="button" class="filter-chip${value === selected ? ' is-active' : ''}"
-            aria-pressed="${String(value === selected)}"
-            onclick="onMenuFilterChange('${field}', '${escapeAttr(value)}')">${escapeHtml(label)}</button>
-    `).join('');
-}
-
 function translateGrade(grade) {
     if (!grade) return '';
     if (GRADE_SORT_ORDER.indexOf(grade) > 1) return `${t('fw_grade_prefix')} ${grade}`;
@@ -7177,19 +7164,19 @@ function getResourceUrlLang(item, url) {
 // options always reflect the other filters currently applied, then re-render
 // the results.
 function renderMenuFilterOptions() {
-    const programChips = document.getElementById('filter-program');
-    const pillarChips = document.getElementById('filter-pillar');
-    const typeChips = document.getElementById('filter-type');
+    const programSel = document.getElementById('filter-program');
+    const pillarSel = document.getElementById('filter-pillar');
+    const typeSel = document.getElementById('filter-type');
     const screenerSel = document.getElementById('filter-screener');
     const subtestSel = document.getElementById('filter-subtest');
     const gradeSel = document.getElementById('filter-grade');
     const evidenceSel = document.getElementById('filter-evidence');
-    if (!programChips || !pillarChips || !typeChips || !screenerSel) return;
+    if (!programSel || !pillarSel || !typeSel || !screenerSel) return;
 
     if (gradeSel) gradeSel.innerHTML = buildFacetOptionsHtml(distinctGradeValues(menuState), menuState.grade, translateGrade);
-    programChips.innerHTML = buildFacetChipsHtml(MENU_LANGUAGE_VALUES, menuState.program, 'program', value => value === 'French Immersion' ? t('filter_language_french') : value);
-    pillarChips.innerHTML = buildFacetChipsHtml(distinctTagValues(menuState, 'pillar'), menuState.pillar, 'pillar', translatePillar);
-    typeChips.innerHTML = buildFacetChipsHtml(distinctTagValues(menuState, 'resourceType'), menuState.resourceType, 'resourceType', translateResourceType);
+    programSel.innerHTML = MENU_LANGUAGE_VALUES.map(value => `<option value="${escapeAttr(value)}"${value === menuState.program ? ' selected' : ''}>${escapeHtml(value === 'French Immersion' ? t('filter_language_french') : value)}</option>`).join('');
+    pillarSel.innerHTML = buildFacetOptionsHtml(distinctTagValues(menuState, 'pillar'), menuState.pillar, translatePillar);
+    typeSel.innerHTML = buildFacetOptionsHtml(distinctTagValues(menuState, 'resourceType'), menuState.resourceType, translateResourceType);
     screenerSel.innerHTML = buildFacetOptionsHtml(distinctTagValues(menuState, 'screener'), menuState.screener);
     if (subtestSel) subtestSel.innerHTML = buildFacetOptionsHtml(distinctTagValues(menuState, 'subtest'), menuState.subtest);
     if (evidenceSel) evidenceSel.innerHTML = buildFacetOptionsHtml(distinctTagValues(menuState, 'evidence'), menuState.evidence, translateEvidence);
@@ -7281,6 +7268,9 @@ function clearMenuFilter(field) {
 // or a reset, where the change didn't originate from the control itself).
 function syncMenuFilterControls() {
     [
+        ['filter-program', 'program'],
+        ['filter-pillar', 'pillar'],
+        ['filter-type', 'resourceType'],
         ['filter-screener', 'screener'],
         ['filter-subtest', 'subtest'],
         ['filter-tier', 'tier'],
@@ -7313,7 +7303,10 @@ function renderMenuResults() {
 function onMenuFilterChange(field, value) {
     menuState[field] = value;
     setRememberedMenuFilters({ [field]: value || null });
-    if (field === 'program') syncMenuLanguageToggle();
+    if (field === 'program') {
+        storeMenuLanguage(value);
+        syncMenuLanguageToggle();
+    }
     renderMenuFilterOptions();
     renderMenuResults();
 }
