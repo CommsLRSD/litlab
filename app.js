@@ -7189,8 +7189,9 @@ function buildResourceLinksHtml(item) {
     }
     return urls.map(url => {
         const lang = getResourceUrlLang(item, url);
-        const label = lang ? `${escapeHtml(t('filter_view_resource'))} (${lang})` : escapeHtml(t('filter_view_resource'));
-        return `<a class="resource-link-btn" href="${escapeAttr(url)}" target="_blank" rel="noopener noreferrer">${label}<span class="material-symbols-rounded" aria-hidden="true" translate="no">open_in_new</span></a>`;
+        const title = lang ? `${t('filter_view_resource')} (${lang})` : t('filter_view_resource');
+        const label = lang || t('filter_view_resource');
+        return `<a class="resource-link-btn" href="${escapeAttr(url)}" target="_blank" rel="noopener noreferrer" aria-label="${escapeAttr(title)}" title="${escapeAttr(title)}">${escapeHtml(label)}<span class="material-symbols-rounded" aria-hidden="true" translate="no">open_in_new</span></a>`;
     }).join('');
 }
 
