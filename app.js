@@ -5829,9 +5829,9 @@ function updateTier2Progress() {
 function proceedToTier2Assessment() {
     console.log('Proceeding to Tier 2 drill down assessment');
     
-    const flowchartData = appState.tierFlowchartData?.tier2;
-    if (!flowchartData || !flowchartData.drillDownAssessments) {
-        console.error('Tier 2 flowchart data not loaded');
+    const flowchartResources = getFlowchartMenuResources(2, 'assessments');
+    if (!flowchartResources.length) {
+        console.error('Tier 2 drill-down assessment resources not loaded');
         return;
     }
     
@@ -5864,7 +5864,7 @@ function proceedToTier2Assessment() {
                         </div>
                         
                         <div class="screener-selection-grid">
-                            ${flowchartData.drillDownAssessments.map(assessment => `
+                            ${flowchartResources.map(assessment => `
                                 <button class="screener-option" onclick="selectTier2Assessment('${assessment.id}', '${assessment.name}')">
                                     <div class="screener-icon">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -5904,9 +5904,9 @@ function selectTier2Assessment(assessmentId, assessmentName) {
 }
 
 function proceedToTier2Intervention() {
-    const flowchartData = appState.tierFlowchartData?.tier2;
-    if (!flowchartData || !flowchartData.interventions) {
-        console.error('Tier 2 intervention data not loaded');
+    const flowchartResources = getFlowchartMenuResources(2, 'interventions');
+    if (!flowchartResources.length) {
+        console.error('Tier 2 intervention resources not loaded');
         return;
     }
     
@@ -5939,7 +5939,7 @@ function proceedToTier2Intervention() {
                         </div>
                         
                         <div class="screener-selection-grid">
-                            ${flowchartData.interventions.map(intervention => `
+                            ${flowchartResources.map(intervention => `
                                 <button class="screener-option" onclick="selectTier2Intervention('${intervention.id}', '${intervention.name}')">
                                     <div class="screener-icon">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -6145,9 +6145,9 @@ function startTier3Flowchart() {
 function proceedToTier3Assessment() {
     console.log('Proceeding to Tier 3 drill down assessment');
     
-    const flowchartData = appState.tierFlowchartData?.tier3;
-    if (!flowchartData || !flowchartData.drillDownAssessments) {
-        console.error('Tier 3 flowchart data not loaded');
+    const flowchartResources = getFlowchartMenuResources(3, 'assessments');
+    if (!flowchartResources.length) {
+        console.error('Tier 3 drill-down assessment resources not loaded');
         return;
     }
     
@@ -6172,7 +6172,7 @@ function proceedToTier3Assessment() {
                         <p>Use the menu below to find and administer a drill down assessment that aligns with the needs of your students, as determined by the literacy screener.</p>
                         
                         <div class="screener-selection-grid">
-                            ${flowchartData.drillDownAssessments.map(assessment => `
+                            ${flowchartResources.map(assessment => `
                                 <button class="screener-option" onclick="selectTier3Assessment('${assessment.id}', '${assessment.name}')">
                                     <div class="screener-icon">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -6212,9 +6212,9 @@ function selectTier3Assessment(assessmentId, assessmentName) {
 }
 
 function proceedToTier3Intervention() {
-    const flowchartData = appState.tierFlowchartData?.tier3;
-    if (!flowchartData || !flowchartData.interventions) {
-        console.error('Tier 3 intervention data not loaded');
+    const flowchartResources = getFlowchartMenuResources(3, 'interventions');
+    if (!flowchartResources.length) {
+        console.error('Tier 3 intervention resources not loaded');
         return;
     }
     
@@ -6239,7 +6239,7 @@ function proceedToTier3Intervention() {
                         <p>Use the menu below to find an appropriate intervention, and administer for an 8-week period. Monitor student response to intervention weekly.</p>
                         
                         <div class="screener-selection-grid">
-                            ${flowchartData.interventions.map(intervention => `
+                            ${flowchartResources.map(intervention => `
                                 <button class="screener-option" onclick="selectTier3Intervention('${intervention.id}', '${intervention.name}')">
                                     <div class="screener-icon">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -6401,12 +6401,26 @@ function closeTierFlowchart() {
     openInteractiveFlowchart();
 }
 
+// Keep the legacy flowchart entry points on the same resource source as the
+// standalone Teaching Resources menu and the embedded flowchart wizard.
+function getFlowchartMenuResources(tier, mode) {
+    const resourceType = mode === 'assessments'
+        ? 'Drill Down Assessment'
+        : 'Intervention';
+    return getFilteredResources({
+        tier: String(tier),
+        program: appState.selectedProgram || 'English',
+        resourceType
+    }, null);
+}
+
 function openInterventionsMenu(tier, mode = 'interventions') {
     console.log(`Opening Interventions Menu for Tier ${tier}, Mode: ${mode}`);
     
-    const tierData = appState.tierFlowchartData?.[`tier${tier}`];
-    if (!tierData) {
-        console.error(`Tier ${tier} data not loaded`);
+    const resourceMode = mode === 'assessments' ? 'assessments' : 'interventions';
+    const items = getFlowchartMenuResources(tier, resourceMode);
+    if (!items.length) {
+        console.error(`No ${resourceMode} resources loaded for Tier ${tier}`);
         return;
     }
     
@@ -6420,10 +6434,6 @@ function openInterventionsMenu(tier, mode = 'interventions') {
     if (!container) return;
     
     container.classList.remove('flowchart-hidden');
-    
-    const items = mode === 'assessments' 
-        ? (tierData.drillDownAssessments || [])
-        : (tierData.interventions || []);
     
     if (items.length === 0) {
         container.innerHTML = `
